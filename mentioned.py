@@ -1,3 +1,5 @@
+import re
+
 from telethon import TelegramClient, events
 from telethon.tl.types import PeerUser
 
@@ -24,10 +26,18 @@ async def handler(event: events.NewMessage.Event):
     if message.mentioned:
         return
     for word in WORDLIST:
-        if word.upper() in message.message.upper():
+        if f" {word.upper()} " in message.message.upper()\
+                or message.message.upper().startswith(f"{word.upper()} ")\
+                or message.message.upper().endswith(f" {word.upper()}"):
             msg = f"[{from_.user_id}](tg://user?id={from_.user_id}) tagged you in"
             msg += f" [{chan.channel_id}](https://t.me/c/{chan.channel_id}/{str(message.id)}):\n"
-            msg += f"{message.message}"
+            found = re.search(f"{word.upper()}", message.message.upper())
+            if found is None:
+                msg += f"{message.message}"
+            else:
+                msg += f"{message.message[:found.start()]}__"\
+                       f"{message.message[found.start():found.end()]}__"\
+                       f"{message.message[found.end():]}"
             await client.send_message("me", msg)
             return
 

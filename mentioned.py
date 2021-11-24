@@ -4,7 +4,7 @@ from telethon.tl.types import PeerUser
 from config import API_ID, API_HASH, WORDLIST
 
 
-client = TelegramClient("mi_chiamano", API_ID, API_HASH)
+client = TelegramClient("notify me on untagged", API_ID, API_HASH)
 client.parse_mode = "markdown"
 
 
@@ -21,12 +21,13 @@ async def handler(event: events.NewMessage.Event):
         return
     if message.message == "" or message.message is None:
         return
-    if event.message.mentioned:
+    if message.mentioned:
         return
     for word in WORDLIST:
-        if word.upper() in event.message.message.upper():
+        if word.upper() in message.message.upper():
             msg = f"[{from_.user_id}](tg://user?id={from_.user_id}) tagged you in"
-            msg += f" [{chan.channel_id}](https://t.me/c/{chan.channel_id}/{str(message.id)})"
+            msg += f" [{chan.channel_id}](https://t.me/c/{chan.channel_id}/{str(message.id)}):\n"
+            msg += f"{message.message}"
             await client.send_message("me", msg)
             return
 

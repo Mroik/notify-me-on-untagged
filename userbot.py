@@ -1,17 +1,15 @@
 import re
+import logging
 
 from telethon import TelegramClient, events
 from telethon.tl.types import PeerUser
-from telegram.ext import Updater
-from telegram import Chat, Bot
 
-from config import API_ID, API_HASH, WORDLIST, GROUP_ID, BOT_TOKEN
+from config import API_ID, API_HASH, WORDLIST, BOT_ID
 
 
+LOG = logging.getLogger(__name__)
 client = TelegramClient("notify me on untagged", API_ID, API_HASH)
-updater = Updater(token=BOT_TOKEN)
-bot: Bot = updater.bot
-chat: Chat = bot.get_chat(GROUP_ID)
+client.parse_mode = "markdown"
 
 
 @client.on(events.NewMessage())
@@ -23,7 +21,7 @@ async def handler(event: events.NewMessage.Event):
 
     if isinstance(event.message.peer_id, PeerUser):
         return
-    if bot.get_me().id == from_.user_id:
+    if int(BOT_ID) == from_.user_id:
         return
     if from_.user_id == me.id:
         return
@@ -44,14 +42,6 @@ async def handler(event: events.NewMessage.Event):
                 msg += f"{message.message[:found.start()]}__"\
                        f"{message.message[found.start():found.end()]}__"\
                        f"{message.message[found.end():]}"
-            chat.send_message(msg, parse_mode="markdown")
+            await client.send_message(await client.get_input_entity(int(BOT_ID)), msg)
+            LOG.info(f"Message from {from_.user_id} was sent to BOT {BOT_ID}")
             return
-
-
-def main():
-    client.start()
-    client.run_until_disconnected()
-
-
-if __name__ == "__main__":
-    main()

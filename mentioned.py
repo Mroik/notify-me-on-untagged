@@ -39,7 +39,7 @@ async def handler(event: events.NewMessage.Event):
                 msg += f"{message.message[:found.start()]}__"\
                        f"{message.message[found.start():found.end()]}__"\
                        f"{message.message[found.end():]}"
-            await client.send_message(client.get_entity(GROUP_ID), msg)
+            await client.send_message(await client.get_entity(GROUP_ID), msg)
             return
 
 

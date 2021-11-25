@@ -2,13 +2,16 @@ import re
 
 from telethon import TelegramClient, events
 from telethon.tl.types import PeerUser
-from telegram import Bot
+from telegram.ext import Updater
+from telegram import Chat
 
 from config import API_ID, API_HASH, WORDLIST, GROUP_ID, BOT_TOKEN
 
 
 client = TelegramClient("notify me on untagged", API_ID, API_HASH)
-bot = Bot(BOT_TOKEN)
+updater = Updater(token=BOT_TOKEN)
+bot = updater.bot
+chat: Chat = bot.get_chat(GROUP_ID)
 
 
 @client.on(events.NewMessage())
@@ -39,7 +42,7 @@ async def handler(event: events.NewMessage.Event):
                 msg += f"{message.message[:found.start()]}__"\
                        f"{message.message[found.start():found.end()]}__"\
                        f"{message.message[found.end():]}"
-            bot.send_message(GROUP_ID, msg, parse_mode="markdown")
+            chat.send_message(msg, parse_mode="markdown")
             return
 
 

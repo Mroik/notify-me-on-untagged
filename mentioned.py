@@ -1,7 +1,8 @@
 import re
 
 from telethon import TelegramClient, events
-from telethon.tl.types import PeerUser
+from telethon.tl.types import PeerUser, InputPeerChannel
+from telethon.tl.custom.chatgetter import ChatGetter
 
 from config import API_ID, API_HASH, WORDLIST, GROUP_ID
 
@@ -38,7 +39,7 @@ async def handler(event: events.NewMessage.Event):
                 msg += f"{message.message[:found.start()]}__"\
                        f"{message.message[found.start():found.end()]}__"\
                        f"{message.message[found.end():]}"
-            await client.send_message(GROUP_ID, msg)
+            await client.send_message(client.get_entity(GROUP_ID), msg)
             return
 
 

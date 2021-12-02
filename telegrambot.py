@@ -18,6 +18,7 @@ def handle_msg_rec(update: Update, context: CallbackContext) -> None:
         return
     update.message.forward(int(GROUP_ID))
     LOG.info(f"Message from {update.message.from_user.id} was forwarded to {GROUP_ID}")
+    update.message.delete()
 
 
 disp.add_handler(MessageHandler(Filters.update, callback=handle_msg_rec))

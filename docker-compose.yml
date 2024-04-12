@@ -1,0 +1,11 @@
+services:
+  untagged:
+    build:
+      dockerfile: Dockerfile
+    environment:
+      - BOT_TOKEN=
+      - CHANNEL_ID=
+      - USER_ID=
+      - API_ID=
+      - API_HASH=
+      - BOTNICK=

@@ -1,10 +1,10 @@
-from telegrambot import updater
+from telegrambot import app
 from userbot import client
 
 
 def main():
     client.start()
-    updater.start_polling()
+    app.run_polling()
     client.run_until_disconnected()
 
 

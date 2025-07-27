@@ -13,9 +13,9 @@ async def check_message(event):
     c: Chat = await message.get_chat()
     sender: User = await message.get_sender()
     try:
-        name = sender.username or sender.first_name
-    except AttributeError:
         name = sender.username
+    except AttributeError:
+        name = sender.first_name
     found = len(list(filter(lambda x: x in message.message.lower(), WORDLIST))) > 0
     if found and (message.mentioned is False or message.mentioned is None):
         to_send = f"[{name}](tg://user?id={message.from_id.user_id}) "

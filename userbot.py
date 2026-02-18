@@ -1,7 +1,7 @@
 from telethon import TelegramClient, events
 from telethon.tl.patched import Message
 from telethon.tl.types import Chat, User
-from config import API_ID, API_HASH, WORDLIST, BOTNICK
+from config import API_ID, API_HASH, WORDLIST, BOTNICK, USER_ID
 
 client = TelegramClient("notify-on-untagged", int(API_ID), API_HASH)
 client.parse_mode = "markdown"
@@ -12,6 +12,8 @@ async def check_message(event):
     message: Message = event.message
     c: Chat = await message.get_chat()
     sender: User = await message.get_sender()
+    if sender.id == int(USER_ID):
+        return
     try:
         name = sender.username
     except AttributeError:
